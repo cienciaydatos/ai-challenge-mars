@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Aman
 data/
 mask_rcnn_venv/
@@ -13,9 +12,6 @@ Mask_RCNN/datasets/JPL_NASA/crater/val/
 .ipynb_checkpoints
 
 
-
-=======
->>>>>>> 79de00b7d0a958d78c49fac0201b5b56f41601db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
