@@ -4,7 +4,8 @@ mask_rcnn_venv/
 venv/
 via-1.0.6/
 Mask_RCNN/datasets/HiRISE
-Mask_RCNN/samples/
+Mask_RCNN/samples/anomaly/*
+Mask_RCNN/samples/crater/*
 Mask_RCNN/datasets/JPL_NASA/crater/train
 Mask_RCNN/datasets/JPL_NASA/crater/test
 Mask_RCNN/datasets/JPL_NASA/crater/val
@@ -15,8 +16,8 @@ Mask_RCNN/datasets/HiRISE_Partial
 Mask_RCNN/datasets/HiRISE_TTV
 Mask_RCNN/output
 Mask_RCNN/raw_data/
-Mask_RCNN/weights/anomaly
-Mask_RCNN/weights/crater
+Mask_RCNN/weights/anomaly/*
+Mask_RCNN/weights/crater/*
 
 .ipynb_checkpoints
 .gitignore
