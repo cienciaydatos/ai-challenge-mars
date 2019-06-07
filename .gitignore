@@ -14,8 +14,10 @@ Mask_RCNN/output
 Mask_RCNN/raw_data/
 Mask_RCNN/weights/anomaly/
 Mask_RCNN/weights/crater/
+Mask_RCNN/samples/crater/
+Mask_RCNN/samples/anomaly/
 .ipynb_checkpoints
-
+.gitignore
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
