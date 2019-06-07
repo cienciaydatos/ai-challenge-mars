@@ -3,12 +3,17 @@ data/
 mask_rcnn_venv/
 venv/
 via-1.0.6/
-Mask_RCNN/weights/crater/
-Mask_RCNN/raw_data/JPL_NASA/
-Mask_RCNN/output
+Mask_RCNN/datasets/HiRISE/
 Mask_RCNN/datasets/JPL_NASA/crater/train/
 Mask_RCNN/datasets/JPL_NASA/crater/test/
 Mask_RCNN/datasets/JPL_NASA/crater/val/
+Mask_RCNN/datasets/JPL_NASA_2/crater/train/
+Mask_RCNN/datasets/JPL_NASA_2/crater/test/
+Mask_RCNN/datasets/JPL_NASA_2/crater/val/
+Mask_RCNN/output
+Mask_RCNN/raw_data/
+Mask_RCNN/weights/anomaly/
+Mask_RCNN/weights/crater/
 .ipynb_checkpoints
 
 
