@@ -1,16 +1,18 @@
 # Aman
 data/
 mask_rcnn_venv/
-venv/
+temp/
 via-1.0.6/
-Mask_RCNN/weights/crater/
-Mask_RCNN/raw_data/JPL_NASA/
-Mask_RCNN/output
-Mask_RCNN/datasets/JPL_NASA/crater/train/
-Mask_RCNN/datasets/JPL_NASA/crater/test/
-Mask_RCNN/datasets/JPL_NASA/crater/val/
 .ipynb_checkpoints
 
+Mask_RCNN/datasets/
+Mask_RCNN/samples/anomaly/anomaly.py
+Mask_RCNN/samples/crater/crater.py
+MAsk_RCNN/weights/crater/*.h5
+MAsk_RCNN/weights/anomaly/*.h5
+Mask_RCNN/output/*.*
+Mask_RCNN/raw_data/*.*
+Mask_RCNN/weights/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
