@@ -1,7 +1,7 @@
 import image_slicer
 from PIL import Image
 import os
-from src import utils
+from split_Images.src import utils
 
 ### Define some variables:
 prefix = 'example_img_01' # prefix for the 'output' file (that's the same that we use as an input)
