@@ -1,3 +1,18 @@
+# Aman
+data/
+mask_rcnn_venv/
+temp/
+via-1.0.6/
+.ipynb_checkpoints
+
+Mask_RCNN/datasets/
+Mask_RCNN/weights/anomaly_2_classes/*.h5
+Mask_RCNN/weights/anomaly_4_classes/*.h5
+Mask_RCNN/weights/crater/*.h5
+Mask_RCNN/output/*.*
+Mask_RCNN/raw_data/*.*
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,3 +117,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+

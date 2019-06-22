@@ -1,0 +1,3 @@
+Four classes
+
+class_names = ["BG","Unknown 1", "Unknown 2", "slope-streak", "bright-dune", "impact-ejecta","swiss-cheese"]

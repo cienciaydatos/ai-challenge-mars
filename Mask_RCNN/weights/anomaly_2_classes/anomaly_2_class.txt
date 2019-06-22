@@ -1,0 +1,3 @@
+Two classes
+
+class_names = ["BG","crater", "sand-dune"]
