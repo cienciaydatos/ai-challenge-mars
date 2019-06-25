@@ -55,7 +55,7 @@ def sharp(img,level=3): #level[1:5]
         sharpened = cv2.filter2D(img, -1, kernel_sharp)
     
     else:
-        sharpened = image
+        sharpened = img
         print("image didn't change...")
     
     return sharpened
@@ -113,3 +113,6 @@ def crop_black_margin(img):
 
 def align_and_crop(img):
   return crop_black_margin(align_image(img))
+
+def augment(img):
+    
