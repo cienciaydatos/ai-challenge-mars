@@ -8,6 +8,7 @@ import numpy as np
 import cv2
 import math
 from scipy import ndimage
+from PIL import Image
 import matplotlib.pyplot as plt
 
 """Tools for satellite imagery pre-processing"""
@@ -34,7 +35,7 @@ def sharp(img,level=3): #level[1:5]
                                  [-1, 5, -1], 
                                  [0, -1, 0]])
         sharpened = cv2.filter2D(img, -1, kernel_sharp)
-        sharpened = cv2.bilateralFilter(sbgimg, 3, 75 ,75)
+        sharpened = cv2.bilateralFilter(img, 3, 75 ,75)
 
     elif level == 3: #med. Best result on average
         kernel_sharp = np.array([[-1, -1, -1],
@@ -114,5 +115,19 @@ def crop_black_margin(img):
 def align_and_crop(img):
   return crop_black_margin(align_image(img))
 
-def augment(img):
-    
+def augment(np_im):
+    img = np.rollaxis(np_im, 1) #useful for data aumentation
+    return img
+
+def stretch_8bit(bands, lower_percent=2, higher_percent=98): #Image enhancement linear contrast stretch
+    out = np.zeros_like(bands)
+    for i in range(3):
+        a = 0 #np.min(band)
+        b = 255  #np.max(band)
+        c = np.percentile(bands[:,:,i], lower_percent)
+        d = np.percentile(bands[:,:,i], higher_percent)        
+        t = a + (bands[:,:,i] - c) * (b - a) / (d - c)    
+        t[t<a] = a
+        t[t>b] = b
+        out[:,:,i] =t
+    return out.astype(np.uint8)
