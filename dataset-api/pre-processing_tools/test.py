@@ -7,9 +7,10 @@ Created on Wed Jun 26 18:29:41 2019
 
 import cv2
 from PIL import Image
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import tools
 import numpy as np
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
 #images
 #PSP_001414_1780_RED_img_row_33792_col_12288_w_1024_h_1024_x_0_y_0
@@ -27,13 +28,13 @@ sharpened = tools.sharp(np_im, 3)
 stretched = tools.stretch_8bit(np_im)
 enhanced = tools.stretch_8bit(sharpened)
 
-#im.save('original.jpg')
-#cv2.imwrite('enhanced.jpg', enhanced)
-#cv2.imwrite('stretched.jpg', stretched)
-#cv2.imwrite('sharpened.jpg', sharpened)
+#im.save('output/original.jpg')
+#cv2.imwrite('output/enhanced.jpg', enhanced)
+#cv2.imwrite('output/stretched.jpg', stretched)
+#cv2.imwrite('output/sharpened.jpg', sharpened)
 
 #_________________ create function with this _________________________
-list_im = ['original.jpg','sharpened.jpg','stretched.jpg','enhanced.jpg']
+list_im = ['output/original.jpg','output/sharpened.jpg','output/stretched.jpg','output/enhanced.jpg']
 imgs    = [ Image.open(i) for i in list_im ]
 # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
 min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
@@ -41,15 +42,15 @@ imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
 
 # save that beautiful picture
 imgs_comb = Image.fromarray( imgs_comb)
-imgs_comb.save( 'test_hor.jpg' )    
+#imgs_comb.save( 'test_hor.jpg' )    
 
 # for a vertical stacking it is simple: use vstack
 imgs_comb = np.vstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
 imgs_comb = Image.fromarray( imgs_comb)
-imgs_comb.save( 'test_ver.jpg' )
+#imgs_comb.save( 'test_ver.jpg' )
 #_______________________________________________________________________
 
-list_im = ['original.jpg','enhanced.jpg']
+list_im = ['output/original.jpg','output/enhanced.jpg']
 imgs    = [ Image.open(i) for i in list_im ]
 # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
 min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
@@ -57,4 +58,6 @@ imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in imgs ) )
 
 # save that beautiful picture
 imgs_comb = Image.fromarray( imgs_comb)
-imgs_comb.save( 'orginal_final.jpg' )
+#imgs_comb.save( 'orginal_final.jpg' )
+
+#tools.augment_random(img, 8)

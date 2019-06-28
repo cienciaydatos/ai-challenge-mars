@@ -8,8 +8,7 @@ import numpy as np
 import cv2
 import math
 from scipy import ndimage
-from PIL import Image
-import matplotlib.pyplot as plt
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
 """Tools for satellite imagery pre-processing"""
 
@@ -115,9 +114,34 @@ def crop_black_margin(img):
 def align_and_crop(img):
   return crop_black_margin(align_image(img))
 
-def augment(np_im):
-    img = np.rollaxis(np_im, 1) #useful for data aumentation
-    return img
+def augment_simple(img):
+    flipped_img = np.fliplr(img)
+    return flipped_img
+    #flip, rotate 90 and rotate 180
+
+def augment_random(img, generations=5): #random augmentation
+    #img = np.rollaxis(np_im, 1) #useful for simple data augmentation
+    datagen = ImageDataGenerator(
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True,
+        fill_mode='nearest')
+
+    x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
+    x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
+
+    # the .flow() command below generates batches of randomly transformed images
+    # and saves the results to the `preview/` directory
+    i = 0
+    for batch in datagen.flow(x, batch_size=1,
+                          save_to_dir='output', save_prefix='augmentation', save_format='jpeg'):
+        i += 1
+        if i >= generations:
+            break  # otherwise the generator would loop indefinitely
+    return True
 
 def stretch_8bit(bands, lower_percent=2, higher_percent=98): #Image enhancement linear contrast stretch
     out = np.zeros_like(bands)
