@@ -9,6 +9,7 @@ import cv2
 import math
 from scipy import ndimage
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+import imutils
 
 """Tools for satellite imagery pre-processing"""
 
@@ -114,10 +115,14 @@ def crop_black_margin(img):
 def align_and_crop(img):
   return crop_black_margin(align_image(img))
 
-def augment_simple(img):
-    flipped_img = np.fliplr(img)
-    return flipped_img
-    #flip, rotate 90 and rotate 180
+def augment_simple(img): #flip, rollback, rotate 90 and rotate 180
+    flipped = np.fliplr(img)
+    rolled = np.rollaxis(img, 1)
+    rotated90 = imutils.rotate(img, 90)
+    rotated180 = imutils.rotate(img, 180)
+    augmentations = [flipped, rolled, rotated90, rotated180]
+    return augmentations
+
 
 def augment_random(img, generations=5): #random augmentation
     #img = np.rollaxis(np_im, 1) #useful for simple data augmentation

@@ -61,3 +61,8 @@ imgs_comb = Image.fromarray( imgs_comb)
 #imgs_comb.save( 'orginal_final.jpg' )
 
 #tools.augment_random(img, 8)
+augmented = tools.augment_simple(img)
+cv2.imwrite("output/flipped.jpg", augmented[0])
+cv2.imwrite("output/rolled.jpg", augmented[1])
+cv2.imwrite("output/rotated90.jpg", augmented[2])
+cv2.imwrite("output/rotated180.jpg", augmented[3])
