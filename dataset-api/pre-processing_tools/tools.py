@@ -123,7 +123,6 @@ def augment_simple(img): #flip, rollback, rotate 90 and rotate 180
     augmentations = [flipped, rolled, rotated90, rotated180]
     return augmentations
 
-
 def augment_random(img, generations=5): #random augmentation
     #img = np.rollaxis(np_im, 1) #useful for simple data augmentation
     datagen = ImageDataGenerator(
