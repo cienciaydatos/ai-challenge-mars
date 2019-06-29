@@ -7,11 +7,11 @@ Created on Wed Jun 26 18:29:41 2019
 
 import cv2
 from PIL import Image
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import tools
 import numpy as np
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
-
+#%%
 #images
 #PSP_001414_1780_RED_img_row_33792_col_12288_w_1024_h_1024_x_0_y_0
 #PSP_001414_1780_RED_img_row_32768_col_15360_w_1024_h_1024_x_0_y_0
@@ -64,7 +64,7 @@ imgs_comb = Image.fromarray( imgs_comb)
 
 tools.augment_random(img, 20)
 #augmented = tools.augment_simple(img)
-#cv2.imwrite("output/parachute.jpg", img)
+#cv2.imwrite("output/chameleon.jpg", img)
 #cv2.imwrite("output/flipped.jpg", augmented[0])
 #cv2.imwrite("output/rolled.jpg", augmented[1])
 #cv2.imwrite("output/rotated90.jpg", augmented[2])

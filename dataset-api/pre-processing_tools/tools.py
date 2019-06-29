@@ -7,8 +7,9 @@ Created on June 15, 2019
 import numpy as np
 import cv2
 import math
+import matplotlib.pyplot as plt
 from scipy import ndimage
-from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+#from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import imutils
 
 """Tools for satellite imagery pre-processing"""
@@ -61,37 +62,47 @@ def sharp(img,level=3): #level[1:5]
     
     return sharpened
 
-def align_image(img):
+def align_image(img): #img not NoneType
   img = np.uint8(img)
   img_edges = cv2.Canny(img, 100, 100, apertureSize=3)
   lines = cv2.HoughLinesP(img_edges, 1, math.pi / 180.0, 100, minLineLength=100, maxLineGap=5)
   if lines is None:
     return img
   
-  # print("lines: ", lines)
+  #print("lines: ", lines)
   angles = []
   
   for x1, y1, x2, y2 in lines[0]:
-    cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
-    angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
-    angles.append(angle)
+      print("x1 : {}, y1 : {}, x2 : {}, y2 : {},".format(x1,y1,x2,y2))
+      cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
+      angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
+      angles.append(angle)
 
   median_angle = np.median(angles)
+  print("Angle detected: {}".format(median_angle))
+  print("angles: ",angles)
+  
+  #if median_angle == -45.0 or median_angle == 45: #fix bug for specific angle
+  #    median_angle = median_angle/2
+      
   img_rotated = ndimage.rotate(img, median_angle)
   return img_rotated
 
-def crop_black_margin(img):
+def crop_black_margin(img, show_contour = False):
   #gray scale conversion first
-  img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  base = img.copy()
+  
+  if len(img.shape) == 3:
+      img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
   #define threshold in 1 for almost black
-  ret, thresh = cv2.threshold(img_gray, 1, 255, cv2.THRESH_BINARY)
+  ret, thresh = cv2.threshold(img, 1, 255, cv2.THRESH_BINARY)
   
   #find the maximum area contour of the filtered image
-  _, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+  contours, hierarchy = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
   
   filter_area = []
   for c in contours:
-    if (cv2.contourArea(c) < 200000):
+    if (cv2.contourArea(c) < 200000): #modify for the biggest pictures...define calculation
       continue #TODO: set automatically with a max function
     filter_area.append(c)
 
@@ -100,7 +111,12 @@ def crop_black_margin(img):
       
   contour = filter_area[0]
   rects = [cv2.boundingRect(cnt) for cnt in contour]
-  height,width = img_gray.shape
+  
+  if show_contour:
+      plt.imshow(contour)
+      plt.show()
+      
+  height,width = img.shape
 
   #Calculate the combined bounding rectangle points.
   bottom_x = min([x for (x, y, height, width) in rects])
@@ -108,7 +124,7 @@ def crop_black_margin(img):
   top_x = max([x+width for (x, y, height, width) in rects])
   top_y = max([y+height for (x, y, height, width) in rects])
 
-  cropped = img[height - top_y : height - bottom_y, bottom_x : top_x]
+  cropped = base[height - top_y : height - bottom_y, bottom_x : top_x]
   
   return cropped
 
