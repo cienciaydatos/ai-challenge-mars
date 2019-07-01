@@ -155,15 +155,18 @@ def random_color(low=5, high=250):
     color = [random_pixel(),random_pixel(),random_pixel()]
     return color
 
-def generate_template(img, color = None):
+def generate_template(img, color = None): #rotar 90
         
-    ref = np.zeros((img.shape[0],img.shape[1],3), dtype = 'uint8')
+    ref = np.zeros((img.shape[0],img.shape[1],3), dtype = 'uint8') #before 1,0
     margin = int(min(img.shape[0], img.shape[1])/10) #a tenth of the minimum lenght
+    print("margin: ", margin)
 
-    for i in range(0,img.shape[1]-2*margin):
+    for i in range(0,img.shape[0]-2*margin): #before = 1
         i+=1
-        for j in range(0,img.shape[0]-2*margin):
+        #print("new i: ",i) #debug
+        for j in range(0,img.shape[1]-2*margin): #before = 0
             colour = random_color() if color == None else color
+            #print(j) #debug
             ref[margin+i,margin+j,:] = colour
             j+=1
     return ref
@@ -178,6 +181,8 @@ def register_image(img, ref = None):  #img must be 3 channels, ref could be None
         ref = generate_template(img) #default color
     elif ref == 'solid': #random color between 5 - 250
         ref = generate_template(img, color=random_color())
+    elif ref == 'gray': 
+        ref = generate_template(img, color=[125,125,125])
     else:
         ref = cv2.imread(ref)
         
@@ -190,6 +195,10 @@ def register_image(img, ref = None):  #img must be 3 channels, ref could be None
     plt.show()
     #Translational transformation
     sr = StackReg(StackReg.TRANSLATION)
+
+    min_shape = [min(ref.shape[0],img.shape[0]), min(ref.shape[1],img.shape[1])]
+    img = cv2.resize(img, (min_shape[0], min_shape[1]))
+    ref = cv2.resize(ref, (min_shape[0], min_shape[1]))
     out_tra = sr.register_transform(ref[:,:,0], img[:,:,0])
     transformations.append(out_tra)
 

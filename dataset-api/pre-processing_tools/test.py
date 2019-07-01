@@ -23,15 +23,15 @@ from scipy import ndimage
 #parachute
 
 path = "C:/Users/SEBASTIAN LAVERDE/Documents/Unterlagen/SoSe2019/mars/python/1024x1024/"
-img = cv2.imread('rocks.jpg')
-im = Image.open('rocks.jpg')
+img = cv2.imread('land.jpg')
+im = Image.open('land.jpg')
 np_im = np.array(im)
 
 sharpened = tools.sharp(np_im, 3)
 stretched = tools.stretch_8bit(np_im)
 
 enhanced1 = tools.stretch_8bit(sharpened)
-enhanced2 = tools.sharp(stretched)
+enhanced2 = tools.sharp(stretched, 3)
 
 plt.imshow(enhanced1)
 plt.show()
@@ -44,13 +44,13 @@ plt.imshow(compare)
 plt.show()
 
 print(type(compare))
-compare.save('rocks_ordercompare.jpg')
+compare.save('land_sharp3.jpg')
 
-compare = tools.concatenate([np_im, enhanced2])
+compare = tools.concatenate([np_im, enhanced1, enhanced2])
 plt.imshow(compare)
 plt.show()
 
-compare.save('rocks_orgfinal.jpg')
+compare.save('land_orgfinal_sharp3.jpg')
 
 #cv2.imwrite('output/enhanced.jpg', enhanced1)
 #cv2.imwrite('output/stretched.jpg', stretched)

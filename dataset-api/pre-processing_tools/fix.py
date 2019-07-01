@@ -182,7 +182,6 @@ GOOD_MATCH_PERCENT = 0.15
  
 def alignImages_homography(im1, im2): #specify format and dimensions
  
-    
   MAX_FEATURES = 500
   GOOD_MATCH_PERCENT = 0.15
     
@@ -215,7 +214,7 @@ def alignImages_homography(im1, im2): #specify format and dimensions
  
   # Draw top matches
   imMatches = cv2.drawMatches(im1, keypoints1, im2, keypoints2, matches, None)
-  cv2.imwrite("matches2.jpg", imMatches)
+  cv2.imwrite("matches_resized.jpg", imMatches)
    
   # Extract location of good matches
   points1 = np.zeros((len(matches), 2), dtype=np.float32)
@@ -239,13 +238,22 @@ def alignImages_homography(im1, im2): #specify format and dimensions
   return im1Reg, h
  #%%
 # Read reference image
-imReference = 'chameleon.jpg'
-imReference = cv2.imread(imReference)
-# Read image to be aligned
-img = imReference.copy()
-img_rotated = ndimage.rotate(img, 27)
-im = img_rotated
+imReference = cv2.imread('bilinear.jpg')
+plt.imshow(imReference)
+plt.show()
 
+im = cv2.imread('resized.jpg')
+imReference = cv2.resize(imReference,(im.shape[1], im.shape[0]))
+plt.imshow(imReference)
+plt.show()
+plt.imshow(im)
+plt.show()
+
+print(type(im))
+print(im.dtype)
+print(im.ndim)
+#tuple object is not callable FIX! : reboot kernel compile libraries and write again...cv2.imwrite('rotated.jpg', im)
+#%%
 #apply thresholding first
 #ret, im = cv2.threshold(im, 1, 125, cv2.THRESH_BINARY)
 #plt.imshow(im)
@@ -253,14 +261,11 @@ im = img_rotated
 
 imReg, h = tools.alignImages_homography(im, imReference)
  
-outFilename = "homography_aligned2.jpg"
-plt.imshow(imReg)
-plt.show()
+outFilename = "homography_aligned_resized.jpg"
+
 #print("Saving aligned image : ", outFilename); 
 cv2.imwrite(outFilename, imReg)
- 
-# Print estimated homography
-print("Estimated homography : \n",  h)
+
 
 #_------------------------------------------------------------------------------------------------
 #%%
@@ -310,22 +315,30 @@ sr = StackReg(StackReg.BILINEAR)
 out_bil = sr.register_transform(ref[:,:,0], mov[:,:,0])
 
 #%%
-plt.imshow(out_tra)
+img = cv2.imread('type2.jpg')
+templ = tools.generate_template(img)
+
+#%%
+trans, _ = tools.register_image(img)
+#%%
+print(type(trans))
+#%%
+plt.imshow(trans[0])
 plt.show()
-plt.imshow(out_rot)
+plt.imshow(trans[1])
 plt.show()
-plt.imshow(out_sca)
+plt.imshow(trans[2])
 plt.show()
-plt.imshow(out_aff)
+plt.imshow(trans[3])
 plt.show()
-plt.imshow(out_bil)
+plt.imshow(trans[4])
 plt.show()
 #%%
-cv2.imwrite('alignment_out_tra.jpg',out_tra)
-cv2.imwrite('alignment_out_rot.jpg',out_rot)
-cv2.imwrite('alignment_out_sca.jpg',out_sca)
-cv2.imwrite('alignment_out_aff.jpg',out_aff)
-cv2.imwrite('alignment_out_bil.jpg',out_bil)
+cv2.imwrite('alignment_out_tra_mars_gray.jpg',trans[0])
+cv2.imwrite('alignment_out_rot_mars_gray.jpg',trans[1])
+cv2.imwrite('alignment_out_sca_mars_gray.jpg',trans[2])
+cv2.imwrite('alignment_out_aff_mars_gray.jpg',trans[3])
+cv2.imwrite('alignment_out_bil_mars_gray.jpg',trans[4])
 #%% test with the jpg images-- working when margin exist all sides
 path = 'C:/Users/SEBASTIAN LAVERDE/Documents/Unterlagen/SoSe2019/mars/python/sample-images/sample-images/'
 #ESP_029670_1530_COLOR.abrowse
