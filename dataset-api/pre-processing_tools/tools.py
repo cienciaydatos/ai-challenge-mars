@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 from scipy import ndimage
 #from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import imutils
+from pystackreg import StackReg
+from skimage import io
 
 """Tools for satellite imagery pre-processing"""
 
@@ -63,30 +65,104 @@ def sharp(img,level=3): #level[1:5]
     return sharpened
 
 def align_image(img): #img not NoneType
-  img = np.uint8(img)
-  img_edges = cv2.Canny(img, 100, 100, apertureSize=3)
-  lines = cv2.HoughLinesP(img_edges, 1, math.pi / 180.0, 100, minLineLength=100, maxLineGap=5)
-  if lines is None:
-    return img
+    
+    """This functions works with discrete angles or decimal points not betwenn 0.2 and 0.7"""
+    img = np.uint8(img)
+    img_edges = cv2.Canny(img, 100, 100, apertureSize=3)
+    lines = cv2.HoughLinesP(img_edges, 1, math.pi / 180.0, 100, minLineLength=100, maxLineGap=5)
+    
+    if lines is None:
+        return img
   
-  #print("lines: ", lines)
-  angles = []
+    #print("lines: ", lines)
+    angles = []
   
-  for x1, y1, x2, y2 in lines[0]:
-      print("x1 : {}, y1 : {}, x2 : {}, y2 : {},".format(x1,y1,x2,y2))
-      cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
-      angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
-      angles.append(angle)
-
-  median_angle = np.median(angles)
-  print("Angle detected: {}".format(median_angle))
-  print("angles: ",angles)
-  
-  #if median_angle == -45.0 or median_angle == 45: #fix bug for specific angle
-  #    median_angle = median_angle/2
+    for x1, y1, x2, y2 in lines[0]:
+        print("x1 : {}, y1 : {}, x2 : {}, y2 : {},".format(x1,y1,x2,y2))
+        cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
+        angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
+        angles.append(angle)
+        
+    median_angle = np.median(angles)
+    print("Angle detected: {}".format(median_angle))
+    print("angles: ",angles)
       
-  img_rotated = ndimage.rotate(img, median_angle)
-  return img_rotated
+    img_rotated = ndimage.rotate(img, median_angle)
+    return img_rotated
+
+def random_pixel(low=5, high=250):
+    return np.random.randint(5,250)
+
+def random_color(low=5, high=250):
+    color = [random_pixel(),random_pixel(),random_pixel()]
+    return color
+
+def generate_template(img, color = None):
+        
+    ref = np.zeros((img.shape[0],img.shape[1],3), dtype = 'uint8')
+    margin = int(min(img.shape[0], img.shape[1])/10) #a tenth of the minimum lenght
+
+    for i in range(0,img.shape[1]-2*margin):
+        i+=1
+        for j in range(0,img.shape[0]-2*margin):
+            colour = random_color() if color == None else color
+            ref[margin+i,margin+j,:] = colour
+            j+=1
+    return ref
+
+def register_image(img, ref = None):  #img must be 3 channels, ref could be None, a steing with the file name and or path, or the word 'noise'
+    
+    """pystackreg library"""
+    
+    transformations = []
+    
+    if ref == None:
+        ref = generate_template(img) #default color
+    elif ref == 'solid': #random color between 5 - 250
+        ref = generate_template(img, color=random_color())
+    else:
+        ref = cv2.imread(ref)
+        
+    print("\nshowing original image...\n")    
+    plt.imshow(img)
+    plt.show()    
+        
+    print("\nshowing reference image...\n")    
+    plt.imshow(ref)
+    plt.show()
+    #Translational transformation
+    sr = StackReg(StackReg.TRANSLATION)
+    out_tra = sr.register_transform(ref[:,:,0], img[:,:,0])
+    transformations.append(out_tra)
+
+    #Rigid Body transformation
+    sr = StackReg(StackReg.RIGID_BODY)
+    out_rot = sr.register_transform(ref[:,:,0], img[:,:,0])
+    transformations.append(out_rot)
+    
+    #Scaled Rotation transformation
+    sr = StackReg(StackReg.SCALED_ROTATION)
+    out_sca = sr.register_transform(ref[:,:,0], img[:,:,0])
+    transformations.append(out_sca)
+    
+    #Affine transformation
+    sr = StackReg(StackReg.AFFINE)
+    out_aff = sr.register_transform(ref[:,:,0], img[:,:,0])
+    transformations.append(out_aff)
+
+    #Bilinear transformation
+    sr = StackReg(StackReg.BILINEAR)
+    out_bil = sr.register_transform(ref[:,:,0], img[:,:,0])    
+    transformations.append(out_bil)
+    
+    return transformations, ref
+
+def concatenate(imgflnames): #file name, dimensionality problem: all the input arrays must have same number of dimensions
+    
+    images = [Image.open(i) for i in imgflnames] #for loop one line for lists
+    min_shape = sorted( [(np.sum(i.size), i.size ) for i in images])[0][1]
+    imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in images ) )
+    return Image.fromarray( imgs_comb)
 
 def crop_black_margin(img, show_contour = False):
   #gray scale conversion first

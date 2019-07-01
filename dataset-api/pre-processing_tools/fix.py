@@ -16,6 +16,8 @@ from numpy.lib.stride_tricks import as_strided
 from warnings import warn
 from PIL import Image
 from scipy import ndimage
+from pystackreg import StackReg
+from skimage import io
 
 def view_as_blocks(arr_in, block_shape):
  
@@ -152,6 +154,174 @@ plt.imshow(img_rotated)
 plt.show()
 plt.imshow(aligned)
 plt.show()
+
+#_--------------------------------HOMOGRAPHY------------------------------------------------
+
+#%% image alignment with template (homography)
+img_rotated = cv2.imread('resized.jpg')
+#img_rotated = ndimage.rotate(img, 27.5) #It's generating an error everytime the angles has a .5 decimal
+aligned = tools.align_image(img_rotated)
+
+template = np.zeros((img_rotated.shape[0],img_rotated.shape[1],3), dtype = 'uint8')
+print(img_rotated.shape)
+template = cv2.rectangle(template,(200,200),(img_rotated.shape[0]-200,img_rotated.shape[1]-200),(125,0,125),-1) #top-left corner and bottom-right corner of rectangle.
+#cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
+plt.imshow(img_rotated)
+plt.show()
+plt.imshow(template)
+plt.show()
+gray_test = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_test)
+plt.show()
+#print(template)
+#%% not working but cool...
+from __future__ import print_function
+import cv2
+import numpy as np
+ 
+ 
+MAX_FEATURES = 500
+GOOD_MATCH_PERCENT = 0.15
+ 
+ 
+def alignImages(im1, im2):
+ 
+  # Convert images to grayscale
+  im1Gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
+  im2Gray = im2[:,:,0]
+  
+  #im1Gray = im1.copy()
+  #im2Gray = im2.copy()
+  
+  # Detect ORB features and compute descriptors.
+  orb = cv2.ORB_create(MAX_FEATURES)
+  keypoints1, descriptors1 = orb.detectAndCompute(im1Gray, None)
+  keypoints2, descriptors2 = orb.detectAndCompute(im2Gray, None)
+   
+  # Match features.
+  matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
+  matches = matcher.match(descriptors1, descriptors2, None)
+   
+  # Sort matches by score
+  matches.sort(key=lambda x: x.distance, reverse=False)
+ 
+  # Remove not so good matches
+  numGoodMatches = int(len(matches) * GOOD_MATCH_PERCENT)
+  matches = matches[:numGoodMatches]
+ 
+  # Draw top matches
+  imMatches = cv2.drawMatches(im1, keypoints1, im2, keypoints2, matches, None)
+  cv2.imwrite("matches2.jpg", imMatches)
+   
+  # Extract location of good matches
+  points1 = np.zeros((len(matches), 2), dtype=np.float32)
+  points2 = np.zeros((len(matches), 2), dtype=np.float32)
+ 
+  for i, match in enumerate(matches):
+    points1[i, :] = keypoints1[match.queryIdx].pt
+    points2[i, :] = keypoints2[match.trainIdx].pt
+   
+  # Find homography
+  h, mask = cv2.findHomography(points1, points2, cv2.RANSAC)
+ 
+  # Use homography
+  height, width, channels = im2.shape
+  im1Reg = cv2.warpPerspective(im1, h, (width, height))
+   
+  return im1Reg, h
+
+# Read reference image
+imReference = template
+ 
+# Read image to be aligned
+im = img_rotated
+
+#apply thresholding first
+   
+ret, im = cv2.threshold(im, 1, 125, cv2.THRESH_BINARY)
+plt.imshow(im)
+plt.show()
+
+print("Aligning images ...")
+print(im.shape, imReference.shape)
+print(type(im), type(imReference))
+
+imReg, h = alignImages(im, imReference)
+   
+# Write aligned image to disk. 
+outFilename = "homography_aligned2.jpg"
+plt.imshow(imReg)
+plt.show()
+#print("Saving aligned image : ", outFilename); 
+cv2.imwrite(outFilename, imReg)
+ 
+# Print estimated homography
+print("Estimated homography : \n",  h)
+
+#_------------------------------------------------------------------------------------------------
+#%%
+from pystackreg import StackReg
+from skimage import io
+
+img_rotated = cv2.imread('type2.jpg')
+#img_rotated = ndimage.rotate(img, 27.5) #It's generating an error everytime the angles has a .5 decimal
+aligned = tools.align_image(img_rotated)
+
+template = np.zeros((img_rotated.shape[0],img_rotated.shape[1],3), dtype = 'uint8')
+print(img_rotated.shape)
+template = cv2.rectangle(template,(200,200),(img_rotated.shape[1]-200,img_rotated.shape[0]-200),(220,15,88),-1) #top-left corner and bottom-right corner of rectangle.
+#cv2.rectangle(img, pt1, pt2, color[, thickness[, lineType[, shift]]])
+plt.imshow(img_rotated)
+plt.show()
+plt.imshow(template)
+plt.show()
+gray_test = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_test)
+plt.show()
+
+#%%
+
+#load reference and "moved" image
+ref = template
+mov = img_rotated
+
+#Translational transformation
+sr = StackReg(StackReg.TRANSLATION)
+out_tra = sr.register_transform(ref[:,:,0], mov[:,:,0])
+
+#Rigid Body transformation
+sr = StackReg(StackReg.RIGID_BODY)
+out_rot = sr.register_transform(ref[:,:,0], mov[:,:,0])
+
+#Scaled Rotation transformation
+sr = StackReg(StackReg.SCALED_ROTATION)
+out_sca = sr.register_transform(ref[:,:,0], mov[:,:,0])
+
+#Affine transformation
+sr = StackReg(StackReg.AFFINE)
+out_aff = sr.register_transform(ref[:,:,0], mov[:,:,0])
+
+#Bilinear transformation
+sr = StackReg(StackReg.BILINEAR)
+out_bil = sr.register_transform(ref[:,:,0], mov[:,:,0])
+
+#%%
+plt.imshow(out_tra)
+plt.show()
+plt.imshow(out_rot)
+plt.show()
+plt.imshow(out_sca)
+plt.show()
+plt.imshow(out_aff)
+plt.show()
+plt.imshow(out_bil)
+plt.show()
+#%%
+cv2.imwrite('alignment_out_tra.jpg',out_tra)
+cv2.imwrite('alignment_out_rot.jpg',out_rot)
+cv2.imwrite('alignment_out_sca.jpg',out_sca)
+cv2.imwrite('alignment_out_aff.jpg',out_aff)
+cv2.imwrite('alignment_out_bil.jpg',out_bil)
 #%% test with the jpg images-- working when margin exist all sides
 path = 'C:/Users/SEBASTIAN LAVERDE/Documents/Unterlagen/SoSe2019/mars/python/sample-images/sample-images/'
 #ESP_029670_1530_COLOR.abrowse
