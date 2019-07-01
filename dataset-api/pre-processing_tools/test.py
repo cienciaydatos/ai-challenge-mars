@@ -23,19 +23,40 @@ from scipy import ndimage
 #parachute
 
 path = "C:/Users/SEBASTIAN LAVERDE/Documents/Unterlagen/SoSe2019/mars/python/1024x1024/"
-img = cv2.imread(path + 'chameleon.jpg')
-im = Image.open(path + 'chameleon.jpg')
+img = cv2.imread('rocks.jpg')
+im = Image.open('rocks.jpg')
 np_im = np.array(im)
 
 sharpened = tools.sharp(np_im, 3)
 stretched = tools.stretch_8bit(np_im)
-enhanced = tools.stretch_8bit(sharpened)
 
-#im.save('output/original.jpg')
-#cv2.imwrite('output/enhanced.jpg', enhanced)
+enhanced1 = tools.stretch_8bit(sharpened)
+enhanced2 = tools.sharp(stretched)
+
+plt.imshow(enhanced1)
+plt.show()
+
+plt.imshow(enhanced2)
+plt.show()
+
+compare = tools.concatenate([np_im, sharpened, stretched, enhanced1, enhanced2])
+plt.imshow(compare)
+plt.show()
+
+print(type(compare))
+compare.save('rocks_ordercompare.jpg')
+
+compare = tools.concatenate([np_im, enhanced2])
+plt.imshow(compare)
+plt.show()
+
+compare.save('rocks_orgfinal.jpg')
+
+#cv2.imwrite('output/enhanced.jpg', enhanced1)
 #cv2.imwrite('output/stretched.jpg', stretched)
-#cv2.imwrite('output/sharpened.jpg', sharpened)
+#v2.imwrite('output/sharpened.jpg', sharpened)
 
+#%%
 #_________________ create function with this _________________________ DONE
 list_im = ['output/original.jpg','output/sharpened.jpg','output/stretched.jpg','output/enhanced.jpg']
 imgs    = [ Image.open(i) for i in list_im ]

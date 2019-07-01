@@ -215,11 +215,15 @@ def register_image(img, ref = None):  #img must be 3 channels, ref could be None
     
     return transformations, ref
 
-def concatenate(imgflnames): #filename: 'name.jpg'
+def concatenate(imgflnames, from_file = False): #filename: 'name.jpg', returns class PIL.Image.Image
 
-    images = [cv2.imread(i) for i in imgflnames]
+    if from_file:
+        images = [cv2.imread(i) for i in imgflnames]
+    else:
+        images = imgflnames
+        
     min_shape = sorted( [(np.sum(i.shape), i.shape ) for i in images])[0][1]
-    imgs_comb = np.hstack( (np.asarray(cv2.resize(i,(min_shape[0], min_shape[1]))) for i in images ) )
+    imgs_comb = np.hstack( (np.asarray(cv2.resize(i,(min_shape[1], min_shape[0]))) for i in images ) ) #height and width are inverted, check this
 
     return Image.fromarray( imgs_comb)
 
