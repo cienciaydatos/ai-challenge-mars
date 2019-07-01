@@ -315,11 +315,11 @@ sr = StackReg(StackReg.BILINEAR)
 out_bil = sr.register_transform(ref[:,:,0], mov[:,:,0])
 
 #%%
-img = cv2.imread('type2.jpg')
-templ = tools.generate_template(img)
+img = cv2.imread('mars.jpg')
+#templ = tools.generate_template(img)
 
 #%%
-trans, _ = tools.register_image(img)
+trans, _ = tools.register_image(img, 'bilinear.jpg')
 #%%
 print(type(trans))
 #%%
@@ -334,11 +334,11 @@ plt.show()
 plt.imshow(trans[4])
 plt.show()
 #%%
-cv2.imwrite('alignment_out_tra_mars_gray.jpg',trans[0])
-cv2.imwrite('alignment_out_rot_mars_gray.jpg',trans[1])
-cv2.imwrite('alignment_out_sca_mars_gray.jpg',trans[2])
-cv2.imwrite('alignment_out_aff_mars_gray.jpg',trans[3])
-cv2.imwrite('alignment_out_bil_mars_gray.jpg',trans[4])
+cv2.imwrite('alignment_out_tra_mars_bilinear.jpg',trans[0])
+cv2.imwrite('alignment_out_rot_mars_bilinear.jpg',trans[1])
+cv2.imwrite('alignment_out_sca_mars_bilinear.jpg',trans[2])
+cv2.imwrite('alignment_out_aff_mars_bilinear.jpg',trans[3])
+cv2.imwrite('alignment_out_bil_mars_bilinear.jpg',trans[4])
 #%% test with the jpg images-- working when margin exist all sides
 path = 'C:/Users/SEBASTIAN LAVERDE/Documents/Unterlagen/SoSe2019/mars/python/sample-images/sample-images/'
 #ESP_029670_1530_COLOR.abrowse

@@ -197,8 +197,8 @@ def register_image(img, ref = None):  #img must be 3 channels, ref could be None
     sr = StackReg(StackReg.TRANSLATION)
 
     min_shape = [min(ref.shape[0],img.shape[0]), min(ref.shape[1],img.shape[1])]
-    img = cv2.resize(img, (min_shape[0], min_shape[1]))
-    ref = cv2.resize(ref, (min_shape[0], min_shape[1]))
+    img = cv2.resize(img, (min_shape[1], min_shape[0]))
+    ref = cv2.resize(ref, (min_shape[1], min_shape[0]))
     out_tra = sr.register_transform(ref[:,:,0], img[:,:,0])
     transformations.append(out_tra)
 
