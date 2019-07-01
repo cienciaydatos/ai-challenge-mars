@@ -65,11 +65,12 @@ def concatenate(imgflnames): #file name, Image.fromarray for cv2 or numpy. Error
     print("dimension 1: ", images[1].ndim)
     min_shape = sorted( [(np.sum(i.shape), i.shape ) for i in images])[0][1]
     print(min_shape)
-    imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in images ) )
+    imgs_comb = np.hstack( (np.asarray(cv2.resize(i,(min_shape[0], min_shape[1]))) for i in images ) )
+        #res = cv2.resize(img_np, dsize=(2048, 2048), interpolation=cv2.INTER_CUBIC)
     imgs_comb = Image.fromarray( imgs_comb)
     return imgs_comb
 
-def concatenate2(imgflnames): #file name, dimensionality problem: all the input arrays must have same number of dimensions
+def concatenate2(imgflnames): #file name, dimensionality problem: all the input arrays must have same number of dimensions. Could be fix with a resize function
     images = [Image.open(i) for i in imgflnames] #for loop one line for lists
     print("\n", type(images), "\n")
     print("lenght: ", len(images))
@@ -78,6 +79,7 @@ def concatenate2(imgflnames): #file name, dimensionality problem: all the input 
     min_shape = sorted( [(np.sum(i.size), i.size ) for i in images])[0][1]
     print(min_shape)
     imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in images ) )
+
     imgs_comb = Image.fromarray( imgs_comb)
     return imgs_comb
 #%%
@@ -92,7 +94,7 @@ imgs_comb = Image.fromarray( imgs_comb)
 plt.imshow(imgs_comb)
 plt.show()
 
-two = concatenate(list_im)
+two = concatenate2(list_im)
 plt.imshow(two)
 plt.show()
 #imgs_comb.save( 'orginal_final.jpg' )
@@ -131,30 +133,35 @@ concatenated = concatenate(img_list)
 plt.imshow(concatenated)
 plt.show()
 
-#%%
-list_im = 'output/enhancement/original.jpg'
-imgs    = Image.open(list_im)
-imgs2 = cv2.imread(list_im)
-print(imgs.size)
-print("PIL Image type: ", type(imgs))
-print(imgs2.shape)
-print("CV2read imgs2 type: ", type(imgs2))
+#%% concatenation test detailed
+list_im1 = 'output/enhancement/original.jpg'
+imgs_1    = Image.open(list_im1)
+imgs2_1 = cv2.imread(list_im1)
+print(imgs_1.size)
+print("PIL Image type: ", type(imgs_1))
+print(imgs2_1.shape)
+print("CV2read imgs2 type: ", type(imgs2_1))
 
-list_im = 'output/enhancement/enhanced.jpg'
-imgs    = Image.open(list_im)
-imgs2 = cv2.imread(list_im)
-print("\n",imgs.size)
-print("PIL Image type: ", type(imgs))
-print(imgs2.shape)
-print("CV2read imgs2 type: ", type(imgs2))
+list_im2 = 'output/enhancement/enhanced.jpg'
+imgs_2    = Image.open(list_im2)
+imgs2_2 = cv2.imread(list_im2)
+print("\n",imgs_2.size)
+print("PIL Image type: ", type(imgs_2))
+print(imgs2_2.shape)
+print("CV2read imgs2 type: ", type(imgs2_2))
 
-list_im = 'bilinear_template.jpg'
-imgs    = Image.open(list_im)
-imgs2 = cv2.imread(list_im)
-print("\n",imgs.size)
-print("PIL Image type: ", type(imgs))
-print(imgs2.shape)
-print("CV2read imgs2 type: ", type(imgs2))
+list_im3 = 'bilinear_template.jpg'
+imgs_3    = Image.open(list_im3)
+imgs2_3 = cv2.imread(list_im3)
+print("\n",imgs_3.size)
+print("PIL Image type: ", type(imgs_3))
+print(imgs2_3.shape)
+print("CV2read imgs2 type: ", type(imgs2_3))
+
+result = tools.concatenate([list_im3, list_im2, list_im1])
+plt.imshow(result)
+plt.show()
+
 #%%
 #img_rotated = ndimage.rotate(img, 27)
 #cv2.imwrite('output/rotated_chameleon27.jpg', img_rotated)

@@ -13,6 +13,7 @@ from scipy import ndimage
 import imutils
 from pystackreg import StackReg
 from skimage import io
+from PIL import Image
 
 """Tools for satellite imagery pre-processing"""
 
@@ -157,11 +158,12 @@ def register_image(img, ref = None):  #img must be 3 channels, ref could be None
     
     return transformations, ref
 
-def concatenate(imgflnames): #file name, dimensionality problem: all the input arrays must have same number of dimensions
-    
-    images = [Image.open(i) for i in imgflnames] #for loop one line for lists
-    min_shape = sorted( [(np.sum(i.size), i.size ) for i in images])[0][1]
-    imgs_comb = np.hstack( (np.asarray( i.resize(min_shape) ) for i in images ) )
+def concatenate(imgflnames): #filename: 'name.jpg'
+
+    images = [cv2.imread(i) for i in imgflnames]
+    min_shape = sorted( [(np.sum(i.shape), i.shape ) for i in images])[0][1]
+    imgs_comb = np.hstack( (np.asarray(cv2.resize(i,(min_shape[0], min_shape[1]))) for i in images ) )
+
     return Image.fromarray( imgs_comb)
 
 def crop_black_margin(img, show_contour = False):
