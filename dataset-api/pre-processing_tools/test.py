@@ -36,7 +36,7 @@ enhanced = tools.stretch_8bit(sharpened)
 #cv2.imwrite('output/stretched.jpg', stretched)
 #cv2.imwrite('output/sharpened.jpg', sharpened)
 
-#_________________ create function with this _________________________
+#_________________ create function with this _________________________ DONE
 list_im = ['output/original.jpg','output/sharpened.jpg','output/stretched.jpg','output/enhanced.jpg']
 imgs    = [ Image.open(i) for i in list_im ]
 # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)

@@ -175,17 +175,17 @@ plt.imshow(gray_test)
 plt.show()
 #print(template)
 #%% not working but cool...
-from __future__ import print_function
-import cv2
-import numpy as np
- 
  
 MAX_FEATURES = 500
 GOOD_MATCH_PERCENT = 0.15
  
  
-def alignImages(im1, im2):
+def alignImages_homography(im1, im2): #specify format and dimensions
  
+    
+  MAX_FEATURES = 500
+  GOOD_MATCH_PERCENT = 0.15
+    
   # Convert images to grayscale
   im1Gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
   im2Gray = im2[:,:,0]
@@ -197,7 +197,11 @@ def alignImages(im1, im2):
   orb = cv2.ORB_create(MAX_FEATURES)
   keypoints1, descriptors1 = orb.detectAndCompute(im1Gray, None)
   keypoints2, descriptors2 = orb.detectAndCompute(im2Gray, None)
-   
+  
+  print("Aligning images ...")
+  print(im1.shape, im2.shape)
+  print(type(im1), type(im2))
+  
   # Match features.
   matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
   matches = matcher.match(descriptors1, descriptors2, None)
@@ -227,28 +231,28 @@ def alignImages(im1, im2):
   # Use homography
   height, width, channels = im2.shape
   im1Reg = cv2.warpPerspective(im1, h, (width, height))
+  
+  plt.imshow(im1Reg)
+  plt.show()
+  print("Estimated homography : \n",  h)
    
   return im1Reg, h
-
+ #%%
 # Read reference image
-imReference = template
- 
+imReference = 'chameleon.jpg'
+imReference = cv2.imread(imReference)
 # Read image to be aligned
+img = imReference.copy()
+img_rotated = ndimage.rotate(img, 27)
 im = img_rotated
 
 #apply thresholding first
-   
-ret, im = cv2.threshold(im, 1, 125, cv2.THRESH_BINARY)
-plt.imshow(im)
-plt.show()
+#ret, im = cv2.threshold(im, 1, 125, cv2.THRESH_BINARY)
+#plt.imshow(im)
+#plt.show()
 
-print("Aligning images ...")
-print(im.shape, imReference.shape)
-print(type(im), type(imReference))
-
-imReg, h = alignImages(im, imReference)
-   
-# Write aligned image to disk. 
+imReg, h = tools.alignImages_homography(im, imReference)
+ 
 outFilename = "homography_aligned2.jpg"
 plt.imshow(imReg)
 plt.show()

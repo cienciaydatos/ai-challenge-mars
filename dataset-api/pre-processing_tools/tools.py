@@ -91,6 +91,63 @@ def align_image(img): #img not NoneType
     img_rotated = ndimage.rotate(img, median_angle)
     return img_rotated
 
+def alignImages_homography(im1, im2): #specify format and dimensions
+ 
+  MAX_FEATURES = 500
+  GOOD_MATCH_PERCENT = 0.15
+    
+  # Convert images to grayscale
+  im1Gray = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
+  im2Gray = im2[:,:,0]
+  
+  #im1Gray = im1.copy()
+  #im2Gray = im2.copy()
+  
+  # Detect ORB features and compute descriptors.
+  orb = cv2.ORB_create(MAX_FEATURES)
+  keypoints1, descriptors1 = orb.detectAndCompute(im1Gray, None)
+  keypoints2, descriptors2 = orb.detectAndCompute(im2Gray, None)
+  
+  print("Aligning images ...")
+  print(im1.shape, im2.shape)
+  print(type(im1), type(im2))
+  
+  # Match features.
+  matcher = cv2.DescriptorMatcher_create(cv2.DESCRIPTOR_MATCHER_BRUTEFORCE_HAMMING)
+  matches = matcher.match(descriptors1, descriptors2, None)
+   
+  # Sort matches by score
+  matches.sort(key=lambda x: x.distance, reverse=False)
+ 
+  # Remove not so good matches
+  numGoodMatches = int(len(matches) * GOOD_MATCH_PERCENT)
+  matches = matches[:numGoodMatches]
+ 
+  # Draw top matches
+  imMatches = cv2.drawMatches(im1, keypoints1, im2, keypoints2, matches, None)
+  cv2.imwrite("matches2.jpg", imMatches)
+   
+  # Extract location of good matches
+  points1 = np.zeros((len(matches), 2), dtype=np.float32)
+  points2 = np.zeros((len(matches), 2), dtype=np.float32)
+ 
+  for i, match in enumerate(matches):
+    points1[i, :] = keypoints1[match.queryIdx].pt
+    points2[i, :] = keypoints2[match.trainIdx].pt
+   
+  # Find homography
+  h, mask = cv2.findHomography(points1, points2, cv2.RANSAC)
+ 
+  # Use homography
+  height, width, channels = im2.shape
+  im1Reg = cv2.warpPerspective(im1, h, (width, height))
+  
+  plt.imshow(im1Reg)
+  plt.show()
+  print("Estimated homography : \n",  h)
+   
+  return im1Reg, h
+
 def random_pixel(low=5, high=250):
     return np.random.randint(5,250)
 
@@ -111,7 +168,7 @@ def generate_template(img, color = None):
             j+=1
     return ref
 
-def register_image(img, ref = None):  #img must be 3 channels, ref could be None, a steing with the file name and or path, or the word 'noise'
+def register_image(img, ref = None):  #img must be 3 channels, ref could be None which is random noise wiht a margin, a string with the file name and or path, or the word 'solid' which is a solid color with a margin
     
     """pystackreg library"""
     
