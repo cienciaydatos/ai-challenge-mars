@@ -9,7 +9,7 @@ import cv2
 import math
 import matplotlib.pyplot as plt
 from scipy import ndimage
-#from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
+from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 import imutils
 from pystackreg import StackReg
 from skimage import io
@@ -224,15 +224,16 @@ def register_image(img, ref = None):  #img must be 3 channels, ref could be None
     
     return transformations, ref
 
-def concatenate(imgflnames, from_file = False): #filename: 'name.jpg', returns class PIL.Image.Image
+def concatenate(imgflnames, from_file = False): #filename: 'name.jpg', returns class PIL.Image.Image, error: cannot write mode F as JPEG
 
     if from_file:
         images = [cv2.imread(i) for i in imgflnames]
+        print(type(images[0]))
     else:
         images = imgflnames
         
     min_shape = sorted( [(np.sum(i.shape), i.shape ) for i in images])[0][1]
-    imgs_comb = np.hstack( (np.asarray(cv2.resize(i,(min_shape[1], min_shape[0]))) for i in images ) ) #height and width are inverted, check this
+    imgs_comb = np.hstack( (np.asarray(cv2.resize(i,(min_shape[1], min_shape[0]))) for i in images ) )
 
     return Image.fromarray( imgs_comb)
 
@@ -287,8 +288,10 @@ def augment_simple(img): #flip, rollback, rotate 90 and rotate 180
     augmentations = [flipped, rolled, rotated90, rotated180]
     return augmentations
 
-def augment_random(img, generations=5): #random augmentation
-    #img = np.rollaxis(np_im, 1) #useful for simple data augmentation
+def augment_random(img, generations=5): #random augmentation, add parameters to define output folder
+  
+    """using keras - tensorflow. It saves the augmentations inside output folder"""
+    
     datagen = ImageDataGenerator(
         rotation_range=40,
         width_shift_range=0.2,
@@ -305,7 +308,7 @@ def augment_random(img, generations=5): #random augmentation
     # and saves the results to the `preview/` directory
     i = 0
     for batch in datagen.flow(x, batch_size=1,
-                          save_to_dir='output', save_prefix='augmentation', save_format='jpeg'):
+                          save_to_dir='output', save_prefix='aug_', save_format='jpg'):
         i += 1
         if i >= generations:
             break  # otherwise the generator would loop indefinitely
@@ -323,3 +326,9 @@ def stretch_8bit(bands, lower_percent=2, higher_percent=98): #Image enhancement 
         t[t>b] = b
         out[:,:,i] =t
     return out.astype(np.uint8)
+
+def enhance(img, sharp_level=3, option=1):
+    sharpened = sharp(img, sharp_level=sharp_level)
+    stretched = stretch_8bit(img)
+    enhanced = stretch_8bit(sharpened) if option==1 else sharp(stretched, sharp_level=sharp_level)
+    return enhanced

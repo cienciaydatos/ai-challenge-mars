@@ -23,12 +23,12 @@ from scipy import ndimage
 #parachute
 
 path = "C:/Users/SEBASTIAN LAVERDE/Documents/Unterlagen/SoSe2019/mars/python/1024x1024/"
-img = cv2.imread('land.jpg')
-im = Image.open('land.jpg')
-np_im = np.array(im)
+img = cv2.imread('rocks.jpg')
+#im = Image.open('rocks.jpg')
+#np_im = np.array(im)
 
-sharpened = tools.sharp(np_im, 3)
-stretched = tools.stretch_8bit(np_im)
+sharpened = tools.sharp(img, 3)
+stretched = tools.stretch_8bit(img)
 
 enhanced1 = tools.stretch_8bit(sharpened)
 enhanced2 = tools.sharp(stretched, 3)
@@ -39,22 +39,48 @@ plt.show()
 plt.imshow(enhanced2)
 plt.show()
 
-compare = tools.concatenate([np_im, sharpened, stretched, enhanced1, enhanced2])
+compare = tools.concatenate([img, sharpened, stretched, enhanced1, enhanced2]) #they are img type
 plt.imshow(compare)
 plt.show()
 
 print(type(compare))
-compare.save('land_sharp3.jpg')
+#cv2.imwrite('land_sharp3.jpg', compare)
 
-compare = tools.concatenate([np_im, enhanced1, enhanced2])
+compare = tools.concatenate([img, enhanced1, enhanced2])
 plt.imshow(compare)
 plt.show()
 
-compare.save('land_orgfinal_sharp3.jpg')
+#compare.save('land_orgfinal_sharp3.jpg')
 
 #cv2.imwrite('output/enhanced.jpg', enhanced1)
 #cv2.imwrite('output/stretched.jpg', stretched)
 #v2.imwrite('output/sharpened.jpg', sharpened)
+
+#%%
+img = cv2.imread('output/techno-signature_augmentation/parachute.jpg')
+#simple = tools.augment_simple(img)
+#augmentations = tools.augment_random(simple[3], generations = 8)
+#augmentations = [flipped, rolled, rotated90, rotated180]
+#cv2.imwrite('flipped.jpg', simple[0])
+#cv2.imwrite('rolled.jpg', simple[1])
+#cv2.imwrite('rotated90.jpg', simple[2])
+#cv2.imwrite('rotated180.jpg', simple[3])
+
+lista = [cv2.imread('aug_00.jpg'),cv2.imread('aug_01.jpg'),cv2.imread('aug_02.jpg'),cv2.imread('aug_03.jpg'),
+cv2.imread('aug_04.jpg'),cv2.imread('aug_05.jpg'),cv2.imread('aug_06.jpg'),cv2.imread('aug_07.jpg')]
+
+#lista2 = [cv2.imread('aug_08.jpg'),cv2.imread('aug_09.jpg'),cv2.imread('aug_10.jpg'),cv2.imread('aug_11.jpg'),
+#cv2.imread('aug_12.jpg'),cv2.imread('aug_13.jpg'),cv2.imread('aug_14.jpg'),cv2.imread('aug_15.jpg')]
+
+#lista3 = [cv2.imread('aug_16.jpg'),cv2.imread('aug_17.jpg'),cv2.imread('aug_18.jpg'),cv2.imread('aug_19.jpg'),
+#cv2.imread('aug_20.jpg'),cv2.imread('aug_21.jpg'),cv2.imread('aug_22.jpg'),cv2.imread('aug_23.jpg')]
+#%%
+concatenated = tools.concatenate(lista)
+
+plt.imshow(concatenated)
+plt.show()
+
+concatenated.save('comb5.jpg')
 
 #%%
 #_________________ create function with this _________________________ DONE
@@ -140,8 +166,19 @@ ref = tools.generate_template(img)
 plt.imshow(ref)
 plt.show()
 
-ref = tools.generate_template(img, [255,0,0])
-plt.imshow(ref)
+cv2.imwrite('refresized.jpg',ref)
+
+#ref = tools.generate_template(img, [255,0,0])
+#plt.imshow(ref)
+#plt.show()
+#%%
+type2_list = ['type2.jpg','reftype2.jpg','translation_type2.jpg','rigid_body_type2.jpg','scale_type2.jpg','affine_type2.jpg','bilatelar_type2.jpg']
+resized_list = ['resized.jpg','align_and_crop_before.jpg','refresized.jpg','translation.jpg','rigid_body.jpg','scaled_rotation.jpg','affine.jpg','bilinear.jpg']
+conc1 = tools.concatenate(type2_list, True)
+plt.imshow(conc1)
+plt.show()
+conc2 = tools.concatenate(resized_list, True)
+plt.imshow(conc2)
 plt.show()
 #%%
 img_list = ['output/enhancement/original.jpg','output/enhancement/enhanced.jpg', 'bilinear_template.jpg'] #dimensionality problem
