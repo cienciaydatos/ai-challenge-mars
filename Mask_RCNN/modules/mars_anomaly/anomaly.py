@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 import skimage.draw
 from numpy  import array
+import argparse
 
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../../")
@@ -61,7 +62,7 @@ class AnomalyDataset(utils.Dataset):
         @return: None
         """
         # Add classes. We have only one class to add.
-        self.add_class("anomaly", 1, "Unknown 1")
+        self.add_class("anomaly", 1, "crater")
         self.add_class("anomaly", 2, "Unknown 2")
         self.add_class("anomaly", 3, "slope-streak")
         self.add_class("anomaly", 4, "bright-dune")
