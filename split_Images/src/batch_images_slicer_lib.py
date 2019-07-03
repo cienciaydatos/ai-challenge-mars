@@ -11,7 +11,7 @@ listInputFiles = utils.get_list_files_folder('../input')
 for element in listInputFiles:
 
     if element.endswith('.jpg'):
-        
+
         imgInput = os.path.join('../input', str(element))  # 'Image input
 
         im = Image.open(imgInput) # Import image to the variable 'im' to get the size of the image

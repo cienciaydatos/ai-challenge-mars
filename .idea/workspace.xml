@@ -2,30 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ec3bcea-bad7-4bbd-b7d3-5d9c542a7644" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/cnn_deep_features/input/example_img_01.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ai-challenge-mars.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ai-challenge-mars.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/input/example_img_01.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_01_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_01_02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_01_03.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_02_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_02_02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_02_03.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_03_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_03_02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_03_03.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_01_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_01_02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_01_03.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_02_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_02_02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_02_03.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_03_01.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_03_02.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_03_03.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/split_Images/src/demo_image_slicer_lib.py" beforeDir="false" afterPath="$PROJECT_DIR$/split_Images/src/demo_image_slicer_lib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/split_Images/src/batch_images_slicer_lib.py" beforeDir="false" afterPath="$PROJECT_DIR$/split_Images/src/batch_images_slicer_lib.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,11 +12,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/split_Images/src/demo_image_slicer_lib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
+            <state relative-caret-position="300">
               <caret line="23" selection-start-line="23" selection-end-line="24" selection-end-column="82" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -50,8 +28,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/split_Images/src/batch_images_slicer_lib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
+            <state relative-caret-position="195">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -102,6 +80,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -136,7 +115,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -226,14 +204,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24947146" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32891566" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32891566" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -248,11 +225,17 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_01_01.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_01_02.png">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/split_Images/output/resized_images/example_img_01_01_01.png" />
+    <entry file="file://$PROJECT_DIR$/split_Images/output/sliced_images/example_img_01_01_02.png" />
+    <entry file="file://$PROJECT_DIR$/split_Images/src/demo_image_slicer_lib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="23" selection-start-line="23" selection-end-line="24" selection-end-column="82" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/split_Images/src/utils.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -263,20 +246,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/split_Images/src/demo_image_slicer_lib.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" selection-start-line="23" selection-end-line="24" selection-end-column="82" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/split_Images/src/batch_images_slicer_lib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
+        <state relative-caret-position="195">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
