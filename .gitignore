@@ -7,13 +7,15 @@ via-1.0.6/
 Mask_RCNN/datasets/HiRISE/
 Mask_RCNN/datasets/JPL_NASA_2/
 Mask_RCNN/datasets/JPL_NASA/
-Mask_RCNN/weights/anomaly_2_classes/*.h5
-Mask_RCNN/weights/anomaly_4_classes/*.h5
-Mask_RCNN/weights/anomaly_5_classes/*.h5
-Mask_RCNN/weights/crater/*.h5
+# Mask_RCNN/weights/anomaly_2_classes/*.h5
+# Mask_RCNN/weights/anomaly_4_classes/*.h5
+# Mask_RCNN/weights/anomaly_5_classes/*.h5
+# Mask_RCNN/weights/crater/*.h5
+Mask_RCNN/weights/
 Mask_RCNN/output/*.*
 Mask_RCNN/raw_data/*.*
 SegNet/
+U-Net/
 
 
 # Byte-compiled / optimized / DLL files
