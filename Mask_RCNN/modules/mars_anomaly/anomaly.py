@@ -5,6 +5,7 @@ import datetime
 import numpy as np
 import skimage.draw
 from numpy  import array
+import argparse
 
 # Root directory of the project
 ROOT_DIR = os.path.abspath("../../")
@@ -36,11 +37,11 @@ class AnomalyConfig(Config):
     # Adjust down if you use a smaller GPU.
     IMAGES_PER_GPU = 2
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 6  # Background + anomaly
+    NUM_CLASSES = 1 + 7  # Background + anomaly
     # Number of training steps per epoch
-    STEPS_PER_EPOCH = 100
-    # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9
+    STEPS_PER_EPOCH = 200
+    # Skip detections with < 80% confidence
+    DETECTION_MIN_CONFIDENCE = 0.8
 
 
 ############################################################
@@ -61,12 +62,13 @@ class AnomalyDataset(utils.Dataset):
         @return: None
         """
         # Add classes. We have only one class to add.
-        self.add_class("anomaly", 1, "Unknown 1")
-        self.add_class("anomaly", 2, "Unknown 2")
+        self.add_class("anomaly", 1, "crater")
+        self.add_class("anomaly", 2, "dark-dune")
         self.add_class("anomaly", 3, "slope-streak")
         self.add_class("anomaly", 4, "bright-dune")
         self.add_class("anomaly", 5, "impact-ejecta")
         self.add_class("anomaly", 6, "swiss-cheese")
+        self.add_class("anomaly", 7, "spider")
 
         # Train or validation dataset?
         assert subset in ["train", "val"]
@@ -77,22 +79,29 @@ class AnomalyDataset(utils.Dataset):
         annotations = [a for a in annotations if a['regions']]
 
         # Add images
-        for a in annotations:
-            polygons = [r['shape_attributes'] for r in a['regions'].values()]
-            names_objects = [s['region_attributes'] for s in a['regions'].values()]
-            num_ids=[]
-            num_ids = [int(n['anomaly']) for n in names_objects]
-            image_path = os.path.join(dataset_dir, a['filename'])
-            image = skimage.io.imread(image_path)
-            height, width = image.shape[:2]
+        try:
+            for a in annotations:
+                polygons = [r['shape_attributes'] for r in a['regions'].values()]
+                names_objects = [s['region_attributes'] for s in a['regions'].values()]
+                num_ids=[]
+                num_ids = [int(n['anomaly']) for n in names_objects]
+                image_path = os.path.join(dataset_dir, a['filename'])
+                image = skimage.io.imread(image_path)
+                height, width = image.shape[:2]
 
-            self.add_image(
-                "anomaly",
-                image_id=a['filename'],  # use file name as a unique image id
-                path=image_path,
-                width=width, height=height,
-                polygons=polygons,
-                num_ids=num_ids)
+                self.add_image(
+                    "anomaly",
+                    image_id=a['filename'],  # use file name as a unique image id
+                    path=image_path,
+                    width=width, height=height,
+                    polygons=polygons,
+                    num_ids=num_ids)
+        except Exception as e:
+            print("There is an Error in Annotated Data, please rectify it")
+            print(e)
+            print()
+            print(a)
+        
 
     def load_mask(self, image_id):
         """
