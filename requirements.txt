@@ -204,7 +204,7 @@ nbformat==4.4.0
 netCDF4==1.5.1.2
 networkx==2.3
 nibabel==2.3.3
-nltk==3.2.5
+nltk==3.6.3
 nose==1.3.7
 notebook==5.2.2
 np-utils==0.5.10.0
